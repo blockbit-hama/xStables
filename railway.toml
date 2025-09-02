@@ -1,0 +1,52 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+
+[env]
+NODE_ENV = "production"
+PORT = "3001"
+HOST = "0.0.0.0"
+LOG_LEVEL = "info"
+
+# Database
+DATABASE_URL = "${{RAILWAY_DATABASE_URL}}"
+
+# Redis
+REDIS_URL = "${{RAILWAY_REDIS_URL}}"
+
+# External APIs
+ZEROX_API_KEY = "${{ZEROX_API_KEY}}"
+ONEINCH_API_KEY = "${{ONEINCH_API_KEY}}"
+
+# RPC URLs
+ETHEREUM_RPC = "${{ETHEREUM_RPC}}"
+ARBITRUM_RPC = "${{ARBITRUM_RPC}}"
+OPTIMISM_RPC = "${{OPTIMISM_RPC}}"
+POLYGON_RPC = "${{POLYGON_RPC}}"
+KLAYTN_RPC = "${{KLAYTN_RPC}}"
+
+# CORS
+ALLOWED_ORIGINS = "${{ALLOWED_ORIGINS}}"
+
+# Rate limiting
+RATE_LIMIT_MAX = "100"
+RATE_LIMIT_WINDOW = "60000"
+
+# Quote settings
+QUOTE_TTL = "30000"
+MAX_SLIPPAGE_BPS = "1000"
+MIN_AMOUNT_USD = "1"
+MAX_AMOUNT_USD = "1000000"
+
+# Gas settings
+GAS_BUFFER_BPS = "1000"
+GAS_PRICE_BUFFER_BPS = "1000"
+
+# Monitoring
+ENABLE_METRICS = "true"
+METRICS_PORT = "9090"
