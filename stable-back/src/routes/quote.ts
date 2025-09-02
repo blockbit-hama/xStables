@@ -6,31 +6,7 @@ export async function quoteRoutes(fastify: FastifyInstance) {
   const quoteService = new QuoteService()
 
   // POST /api/quote
-  fastify.post('/', {
-    schema: {
-      description: 'Get the best quote for a token swap',
-      tags: ['quote'],
-      body: QuoteRequestSchema,
-      response: {
-        200: QuoteResponseSchema,
-        400: {
-          type: 'object',
-          properties: {
-            error: { type: 'string' },
-            message: { type: 'string' },
-            details: { type: 'object' }
-          }
-        },
-        500: {
-          type: 'object',
-          properties: {
-            error: { type: 'string' },
-            message: { type: 'string' }
-          }
-        }
-      }
-    }
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.post('/', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const quoteRequest = QuoteRequestSchema.parse(request.body)
       

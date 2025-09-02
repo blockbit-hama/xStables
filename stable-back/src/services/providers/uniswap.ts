@@ -26,7 +26,7 @@ const QUOTER_ABI = parseAbi([
 // Uniswap V3 Router ABI
 const ROUTER_ABI = parseAbi([
   'function exactInputSingle((address tokenIn, address tokenOut, uint24 fee, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum, uint160 sqrtPriceLimitX96)) external returns (uint256 amountOut)',
-  'function exactInput((bytes memory path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum) external returns (uint256 amountOut)'
+  'function exactInput((bytes path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum)) external returns (uint256 amountOut)'
 ])
 
 const UNISWAP_V3_QUOTER = {

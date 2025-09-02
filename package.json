@@ -5,7 +5,7 @@
   "private": true,
   "workspaces": [
     "stable-front",
-    "stable-back", 
+    "stable-back",
     "packages/*"
   ],
   "scripts": {
@@ -17,12 +17,15 @@
     "type-check": "turbo run type-check"
   },
   "devDependencies": {
-    "turbo": "^1.10.12",
     "@types/node": "^20.8.0",
+    "turbo": "^1.10.12",
     "typescript": "^5.2.2"
   },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "tailwindcss-animate": "^1.0.7"
   }
 }

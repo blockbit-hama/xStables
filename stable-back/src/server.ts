@@ -74,12 +74,7 @@ async function buildServer() {
   })
 
   // Routes
-  await fastify.register(quoteRoutes, { prefix: '/api/quote' })
-  await fastify.register(txRoutes, { prefix: '/api/tx' })
   await fastify.register(healthRoutes, { prefix: '/api/health' })
-  await fastify.register(monetizationRoutes, { prefix: '/api/monetization' })
-  await fastify.register(riskRoutes, { prefix: '/api/risk' })
-  await fastify.register(partnerRoutes, { prefix: '/api/partner' })
 
   // Error handler
   fastify.setErrorHandler((error, request, reply) => {

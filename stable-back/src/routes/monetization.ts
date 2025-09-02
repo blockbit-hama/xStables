@@ -51,37 +51,6 @@ export async function monetizationRoutes(fastify: FastifyInstance) {
    * 서비스 수수료 계산
    */
   fastify.post('/calculate-fee', {
-    schema: {
-      body: CalculateFeeRequestSchema,
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            data: {
-              type: 'object',
-              properties: {
-                serviceFeeUsd: { type: 'number' },
-                partnerRevenueUsd: { type: 'number' },
-                platformRevenueUsd: { type: 'number' },
-                effectiveFeeBps: { type: 'number' },
-                savingsSharePercent: { type: 'number' },
-                feeBreakdown: {
-                  type: 'object',
-                  properties: {
-                    baseFeeUsd: { type: 'number' },
-                    volumeDiscountUsd: { type: 'number' },
-                    partnerDiscountUsd: { type: 'number' },
-                    finalFeeUsd: { type: 'number' },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { amountInUsd, userAddress, partnerId, savingsUsd, useSavingsBasedFee } = request.body as z.infer<typeof CalculateFeeRequestSchema>;
 
@@ -136,27 +105,6 @@ export async function monetizationRoutes(fastify: FastifyInstance) {
    * 거래 기록 저장
    */
   fastify.post('/record-transaction', {
-    schema: {
-      body: RecordTransactionRequestSchema,
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            data: {
-              type: 'object',
-              properties: {
-                transactionId: { type: 'string' },
-                serviceFeeUsd: { type: 'number' },
-                partnerRevenueUsd: { type: 'number' },
-                platformRevenueUsd: { type: 'number' },
-              },
-            },
-          },
-        },
-      },
-    },
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const {
         userAddress,
@@ -221,29 +169,6 @@ export async function monetizationRoutes(fastify: FastifyInstance) {
    * 파트너 등록
    */
   fastify.post('/partners', {
-    schema: {
-      body: RegisterPartnerRequestSchema,
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            data: {
-              type: 'object',
-              properties: {
-                partnerId: { type: 'string' },
-                partnerName: { type: 'string' },
-                sharePercent: { type: 'number' },
-                totalVolumeUsd: { type: 'number' },
-                totalRevenueUsd: { type: 'number' },
-                isActive: { type: 'boolean' },
-              },
-            },
-          },
-        },
-      },
-    },
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { partnerId, partnerName, sharePercent } = request.body as z.infer<typeof RegisterPartnerRequestSchema>;
 
@@ -272,32 +197,6 @@ export async function monetizationRoutes(fastify: FastifyInstance) {
    * 파트너 목록 조회
    */
   fastify.get('/partners', {
-    schema: {
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            data: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  partnerId: { type: 'string' },
-                  partnerName: { type: 'string' },
-                  sharePercent: { type: 'number' },
-                  totalVolumeUsd: { type: 'number' },
-                  totalRevenueUsd: { type: 'number' },
-                  transactionCount: { type: 'number' },
-                  isActive: { type: 'boolean' },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const partners = await monetizationService.getPartners();
 
@@ -320,37 +219,6 @@ export async function monetizationRoutes(fastify: FastifyInstance) {
    * 파트너 상세 조회
    */
   fastify.get('/partners/:partnerId', {
-    schema: {
-      params: {
-        type: 'object',
-        properties: {
-          partnerId: { type: 'string' },
-        },
-        required: ['partnerId'],
-      },
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            data: {
-              type: 'object',
-              properties: {
-                partnerId: { type: 'string' },
-                partnerName: { type: 'string' },
-                sharePercent: { type: 'number' },
-                totalVolumeUsd: { type: 'number' },
-                totalRevenueUsd: { type: 'number' },
-                transactionCount: { type: 'number' },
-                lastTransactionTime: { type: 'number' },
-                isActive: { type: 'boolean' },
-              },
-            },
-          },
-        },
-      },
-    },
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { partnerId } = request.params as { partnerId: string };
 
@@ -384,35 +252,6 @@ export async function monetizationRoutes(fastify: FastifyInstance) {
    * 프리미엄 기능 목록 조회
    */
   fastify.get('/premium-features', {
-    schema: {
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            data: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  id: { type: 'string' },
-                  name: { type: 'string' },
-                  description: { type: 'string' },
-                  priceUsd: { type: 'number' },
-                  priceType: { type: 'string' },
-                  isActive: { type: 'boolean' },
-                  features: {
-                    type: 'array',
-                    items: { type: 'string' },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const features = await monetizationService.getPremiumFeatures();
 
@@ -435,39 +274,6 @@ export async function monetizationRoutes(fastify: FastifyInstance) {
    * 프리미엄 기능 가격 계산
    */
   fastify.post('/premium-features/calculate-price', {
-    schema: {
-      body: PremiumFeatureRequestSchema,
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            data: {
-              type: 'object',
-              properties: {
-                totalPriceUsd: { type: 'number' },
-                pricePerUnit: { type: 'number' },
-                feature: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'string' },
-                    name: { type: 'string' },
-                    description: { type: 'string' },
-                    priceUsd: { type: 'number' },
-                    priceType: { type: 'string' },
-                    features: {
-                      type: 'array',
-                      items: { type: 'string' },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { featureId, usageCount } = request.body as z.infer<typeof PremiumFeatureRequestSchema>;
 
@@ -497,35 +303,6 @@ export async function monetizationRoutes(fastify: FastifyInstance) {
    * 화이트라벨 가격 계산
    */
   fastify.post('/white-label/pricing', {
-    schema: {
-      body: WhiteLabelPricingRequestSchema,
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            data: {
-              type: 'object',
-              properties: {
-                monthlyFeeUsd: { type: 'number' },
-                revenueSharePercent: { type: 'number' },
-                totalCostUsd: { type: 'number' },
-                pricingBreakdown: {
-                  type: 'object',
-                  properties: {
-                    setupFee: { type: 'number' },
-                    monthlyFee: { type: 'number' },
-                    revenueShare: { type: 'number' },
-                    supportFee: { type: 'number' },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { partnerId, expectedVolumeUsd } = request.body as z.infer<typeof WhiteLabelPricingRequestSchema>;
 
@@ -566,49 +343,6 @@ export async function monetizationRoutes(fastify: FastifyInstance) {
    * 수익 분석 데이터 조회
    */
   fastify.get('/analytics', {
-    schema: {
-      querystring: {
-        type: 'object',
-        properties: {
-          period: { type: 'string', enum: ['1d', '7d', '30d', '90d'] },
-        },
-      },
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            data: {
-              type: 'object',
-              properties: {
-                period: { type: 'string' },
-                totalVolumeUsd: { type: 'number' },
-                totalRevenueUsd: { type: 'number' },
-                platformRevenueUsd: { type: 'number' },
-                partnerRevenueUsd: { type: 'number' },
-                transactionCount: { type: 'number' },
-                averageTransactionSize: { type: 'number' },
-                topPartners: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      partnerId: { type: 'string' },
-                      partnerName: { type: 'string' },
-                      totalRevenueUsd: { type: 'number' },
-                      transactionCount: { type: 'number' },
-                    },
-                  },
-                },
-                revenueByChain: { type: 'object' },
-                revenueByToken: { type: 'object' },
-              },
-            },
-          },
-        },
-      },
-    },
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { period = '30d' } = request.query as { period?: string };
 
@@ -635,36 +369,6 @@ export async function monetizationRoutes(fastify: FastifyInstance) {
    * 현재 수수료 구조 조회
    */
   fastify.get('/fee-structure', {
-    schema: {
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            data: {
-              type: 'object',
-              properties: {
-                serviceFeeBps: { type: 'number' },
-                minFeeUsd: { type: 'number' },
-                maxFeeUsd: { type: 'number' },
-                partnerSharePercent: { type: 'number' },
-                volumeDiscountTiers: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      volumeUsd: { type: 'number' },
-                      discountBps: { type: 'number' },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const feeStructure = await monetizationService.getFeeStructure();
 

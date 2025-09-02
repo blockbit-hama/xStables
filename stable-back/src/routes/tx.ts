@@ -6,31 +6,7 @@ export async function txRoutes(fastify: FastifyInstance) {
   const txService = new TransactionService()
 
   // POST /api/tx/build
-  fastify.post('/build', {
-    schema: {
-      description: 'Build transaction data for token swap',
-      tags: ['transaction'],
-      body: TxBuildRequestSchema,
-      response: {
-        200: TxBuildResponseSchema,
-        400: {
-          type: 'object',
-          properties: {
-            error: { type: 'string' },
-            message: { type: 'string' },
-            details: { type: 'object' }
-          }
-        },
-        500: {
-          type: 'object',
-          properties: {
-            error: { type: 'string' },
-            message: { type: 'string' }
-          }
-        }
-      }
-    }
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.post('/build', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const txRequest = TxBuildRequestSchema.parse(request.body)
       
