@@ -1,0 +1,186 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  ISSUER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  SUSPENDED
+}
+
+enum StablecoinType {
+  FIAT_BACKED
+  CRYPTO_BACKED
+  ALGORITHMIC
+  HYBRID
+}
+
+enum StablecoinStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ACTIVE
+  PAUSED
+  TERMINATED
+}
+
+enum TransactionType {
+  MINT
+  BURN
+  TRANSFER
+  DEPOSIT
+  WITHDRAWAL
+  RESERVE_DEPOSIT
+  RESERVE_WITHDRAWAL
+}
+
+enum TransactionStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+  CANCELLED
+}
+
+enum ReserveType {
+  FIAT
+  CRYPTO
+  BOND
+  COMMODITY
+  OTHER
+}
+
+enum ReserveStatus {
+  ACTIVE
+  INACTIVE
+  LIQUIDATED
+}
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  password        String
+  firstName       String?
+  lastName        String?
+  company         String?
+  phone           String?
+  role            UserRole  @default(USER)
+  status          UserStatus @default(PENDING)
+  walletAddress   String?
+  isKycVerified   Boolean   @default(false)
+  isAmlVerified   Boolean   @default(false)
+  kycData         Json?
+  amlData         Json?
+  lastLoginAt     DateTime?
+  emailVerifiedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  stablecoins  Stablecoin[]
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model Stablecoin {
+  id              String           @id @default(uuid())
+  name            String
+  symbol          String
+  contractAddress String
+  network         String
+  type            StablecoinType   @default(FIAT_BACKED)
+  status          StablecoinStatus @default(PENDING)
+  totalSupply     Decimal          @default(0) @db.Decimal(20, 8)
+  maxSupply       Decimal          @default(0) @db.Decimal(20, 8)
+  pegValue        Decimal          @default(0) @db.Decimal(20, 8)
+  pegCurrency     String?
+  reserveRatio    Decimal          @default(0) @db.Decimal(20, 8)
+  metadata        Json?
+  configuration   Json?
+  description     String?
+  website         String?
+  whitepaper      String?
+  isAudited       Boolean          @default(false)
+  auditReport     String?
+  deployedAt      DateTime?
+  approvedAt      DateTime?
+  approvedBy      String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  // Relations
+  ownerId     String
+  owner       User          @relation(fields: [ownerId], references: [id])
+  transactions Transaction[]
+  reserves    Reserve[]
+
+  @@map("stablecoins")
+}
+
+model Transaction {
+  id            String            @id @default(uuid())
+  txHash        String
+  blockNumber   Int
+  type          TransactionType
+  status        TransactionStatus @default(PENDING)
+  amount        Decimal           @db.Decimal(20, 8)
+  fee           Decimal?          @db.Decimal(20, 8)
+  fromAddress   String?
+  toAddress     String?
+  metadata      Json?
+  gasUsed       String?
+  gasPrice      String?
+  nonce         Int?
+  confirmedAt   DateTime?
+  failedAt      DateTime?
+  failureReason String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  // Relations
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  stablecoinId  String
+  stablecoin    Stablecoin  @relation(fields: [stablecoinId], references: [id])
+
+  @@map("transactions")
+}
+
+model Reserve {
+  id              String        @id @default(uuid())
+  name            String
+  type            ReserveType
+  status          ReserveStatus @default(ACTIVE)
+  amount          Decimal       @db.Decimal(20, 8)
+  currency        String
+  exchangeRate    Decimal       @default(1) @db.Decimal(20, 8)
+  custodian       String?
+  custodianAddress String?
+  metadata        Json?
+  auditReport     String?
+  lastAuditDate   DateTime?
+  nextAuditDate   DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  stablecoinId String
+  stablecoin   Stablecoin @relation(fields: [stablecoinId], references: [id])
+
+  @@map("reserves")
+}

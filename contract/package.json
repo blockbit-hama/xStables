@@ -1,0 +1,26 @@
+{
+  "name": "xstables-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for xStables stablecoin issuance service",
+  "main": "index.js",
+  "scripts": {
+    "dev": "hardhat node",
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.ts",
+    "deploy:local": "hardhat run scripts/deploy.ts --network localhost",
+    "build": "hardhat compile"
+  },
+  "keywords": [
+    "stablecoin",
+    "defi",
+    "ethereum"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^4.9.3",
+    "hardhat": "^2.19.0"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "xstables",
+  "version": "1.0.0",
+  "description": "Stablecoin Issuance Service Platform",
+  "private": true,
+  "workspaces": [
+    "contract",
+    "back", 
+    "front"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:contract\" \"npm run dev:back\" \"npm run dev:front\"",
+    "dev:contract": "cd contract && npm run dev",
+    "dev:back": "cd back && npm run start:dev", 
+    "dev:front": "cd front && npm run dev",
+    "build": "npm run build:contract && npm run build:back && npm run build:front",
+    "build:contract": "cd contract && npm run build",
+    "build:back": "cd back && npm run build",
+    "build:front": "cd front && npm run build",
+    "test": "npm run test:contract && npm run test:back && npm run test:front",
+    "test:contract": "cd contract && npm run test",
+    "test:back": "cd back && npm run test",
+    "test:front": "cd front && npm run test",
+    "install:all": "npm install && cd contract && npm install && cd ../back && npm install && cd ../front && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
